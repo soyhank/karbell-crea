@@ -1,0 +1,14 @@
+---
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-navy/10 bg-white">
+  <div class="container-x flex flex-col items-center justify-between gap-6 py-10 sm:flex-row">
+    <a href="#inicio" class="flex items-center gap-2.5">
+      <img src="/img/isotipo.png" alt="" width="289" height="368" loading="lazy" class="h-9 w-auto" />
+      <span class="font-display font-extrabold text-navy">KARBELL <span class="font-semibold tracking-[0.3em] text-teal">CREA</span></span>
+    </a>
+    <p class="text-center text-sm text-ink/55">{site.tagline} · <a href={`mailto:${site.email}`} class="hover:text-teal">{site.email}</a></p>
+    <p class="text-xs text-ink/40">© {year} {site.name}</p>
+  </div>
+</footer>

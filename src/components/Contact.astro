@@ -1,0 +1,70 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+---
+<section id="contacto" class="pb-24 sm:pb-28">
+  <div class="container-x">
+    <div class="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-navy via-navy-2 to-teal p-8 text-white shadow-lift sm:p-12 lg:p-16">
+      <div class="dots pointer-events-none absolute inset-0 opacity-20 [filter:invert(1)]"></div>
+      <div class="pointer-events-none absolute -right-20 -bottom-24 size-80 rounded-full bg-gold/30 blur-3xl"></div>
+
+      <div class="relative grid gap-12 lg:grid-cols-[1fr_1.1fr]">
+        <div>
+          <p class="eyebrow !text-sky">Contacto</p>
+          <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">¿Tienes una idea? Hagámosla realidad</h2>
+          <p class="mt-4 max-w-md text-white/75">
+            Estamos preparando el lanzamiento de Karbell Crea y ya recibimos consultas y pedidos. Escríbenos y te responderemos
+            con una propuesta para tu diseño.
+          </p>
+          <a href={`mailto:${site.email}`} class="mt-8 inline-flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-4 transition hover:bg-white/15">
+            <span class="grid size-11 place-items-center rounded-xl bg-gold text-ink">
+              <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
+            </span>
+            <span><span class="block text-xs text-white/60">Escríbenos a</span><span class="font-semibold break-all">{site.email}</span></span>
+          </a>
+        </div>
+
+        <form id="quote-form" class="grid gap-4 rounded-[2rem] bg-white p-6 text-ink sm:p-8" novalidate>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="grid gap-1.5 text-sm font-semibold text-navy">Tu nombre
+              <input name="nombre" class="field font-normal" required autocomplete="name" placeholder="¿Cómo te llamas?" />
+            </label>
+            <label class="grid gap-1.5 text-sm font-semibold text-navy">Producto
+              <select name="producto" class="field font-normal">
+                {services.map((s) => <option>{s.title}</option>)}
+                <option>Otro / aún no lo sé</option>
+              </select>
+            </label>
+          </div>
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Cantidad aproximada
+            <input name="cantidad" class="field font-normal" inputmode="numeric" placeholder="Ej.: 12 polos" />
+          </label>
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Cuéntanos tu idea
+            <textarea name="idea" rows="4" class="field resize-none font-normal" required placeholder="Colores, frase, logo, para qué ocasión es, fecha en que lo necesitas..."></textarea>
+          </label>
+          <p id="form-error" class="hidden text-sm font-medium text-red-600">Completa tu nombre y tu idea para continuar.</p>
+          <button type="submit" class="btn btn-gold w-full !py-3.5">
+            Enviar mi idea por correo
+            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" /></svg>
+          </button>
+          <p class="text-center text-xs text-ink/50">Se abrirá tu aplicación de correo con el mensaje listo para enviar.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ email: site.email }}>
+  const form = document.getElementById('quote-form');
+  const err = document.getElementById('form-error');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new FormData(form);
+    const nombre = String(d.get('nombre') || '').trim();
+    const idea = String(d.get('idea') || '').trim();
+    if (!nombre || !idea) { err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+    const body = `Hola Karbell Crea, soy ${nombre}.\n\nProducto: ${d.get('producto')}\nCantidad: ${String(d.get('cantidad') || '').trim() || 'por definir'}\n\nMi idea:\n${idea}\n`;
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent('Cotización: ' + d.get('producto'))}&body=${encodeURIComponent(body)}`;
+  });
+</script>

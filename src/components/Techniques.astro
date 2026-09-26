@@ -1,0 +1,39 @@
+---
+import { techniques } from '../data/services';
+---
+<section id="tecnicas" class="relative overflow-hidden bg-ink py-24 text-white sm:py-28">
+  <div class="pointer-events-none absolute -top-32 right-0 size-96 rounded-full bg-teal/25 blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-32 left-0 size-96 rounded-full bg-gold/15 blur-3xl"></div>
+  <div class="container-x relative">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow !text-teal-2">Nuestras técnicas</p>
+      <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Dos técnicas, una sola meta: que tu diseño luzca increíble</h2>
+      <p class="mt-4 text-white/65">Según la tela, el color y el tipo de diseño, te recomendamos la técnica que mejor funciona.</p>
+    </div>
+
+    <div class="mt-14 grid gap-6 lg:grid-cols-2">
+      {techniques.map((t, i) => (
+        <article class="reveal relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 backdrop-blur sm:p-10" style={`--d:${i * 120}ms`}>
+          <div class={`absolute inset-x-0 top-0 h-1 ${i === 0 ? 'bg-gradient-to-r from-teal-2 to-navy-2' : 'bg-gradient-to-r from-gold to-gold-2'}`}></div>
+          <span class={`font-display text-6xl font-black ${i === 0 ? 'text-teal-2/25' : 'text-gold/25'}`}>0{i + 1}</span>
+          <h3 class="mt-2 text-2xl font-extrabold">{t.name}</h3>
+          <p class={`mt-2 font-semibold ${i === 0 ? 'text-teal-2' : 'text-gold'}`}>{t.lead}</p>
+          <p class="mt-4 leading-relaxed text-white/70">{t.text}</p>
+          <p class="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-white/45">Ideal para</p>
+          <ul class="mt-3 grid gap-2.5">
+            {t.best.map((b) => (
+              <li class="flex items-start gap-3 text-white/85">
+                <svg viewBox="0 0 24 24" class={`mt-0.5 size-5 shrink-0 ${i === 0 ? 'text-teal-2' : 'text-gold'}`} fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                {b}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+
+    <p class="reveal mt-10 rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-4 text-center text-sm text-white/70">
+      ¿No sabes cuál elegir? No te preocupes: cuéntanos qué quieres lograr y te asesoramos sin compromiso.
+    </p>
+  </div>
+</section>

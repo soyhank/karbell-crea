@@ -1,0 +1,21 @@
+---
+import { steps } from '../data/services';
+---
+<section id="proceso" class="py-24 sm:py-28">
+  <div class="container-x">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="eyebrow">Cómo trabajamos</p>
+      <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">De tu idea a tus manos en 4 pasos</h2>
+    </div>
+    <ol class="relative mt-16 grid gap-10 md:grid-cols-4 md:gap-6">
+      <div class="absolute top-7 right-[12%] left-[12%] hidden h-0.5 bg-gradient-to-r from-teal via-navy-2 to-gold md:block" aria-hidden="true"></div>
+      {steps.map((s, i) => (
+        <li class="reveal relative text-center" style={`--d:${i * 110}ms`}>
+          <span class="relative mx-auto grid size-14 place-items-center rounded-full border-4 border-mist bg-navy font-display text-lg font-extrabold text-white shadow-soft">{i + 1}</span>
+          <h3 class="mt-5 text-lg font-bold text-navy">{s.t}</h3>
+          <p class="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-ink/65">{s.d}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

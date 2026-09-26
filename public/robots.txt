@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://karbell-crea.vercel.app/sitemap-index.xml
