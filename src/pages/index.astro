@@ -1,23 +1,107 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
+import Shop from '../layouts/Shop.astro';
 import Hero from '../components/Hero.astro';
 import Marquee from '../components/Marquee.astro';
-import Services from '../components/Services.astro';
+import ProductCard from '../components/ProductCard.astro';
+import PackCard from '../components/PackCard.astro';
 import Techniques from '../components/Techniques.astro';
-import Process from '../components/Process.astro';
-import Contact from '../components/Contact.astro';
-import Footer from '../components/Footer.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { products, categories } from '../data/products';
+import { packs } from '../data/packs';
+import { waLink } from '../data/site';
+
+const featured = ['taza-11oz', 'polo-vinil', 'cojin', 'camiseta'].map((id) => products.find((p) => p.id === id)!);
+const featuredPacks = ['pack-mama', 'pack-cumple', 'pack-emprendedor'].map((id) => packs.find((p) => p.id === id)!);
+const catImg: Record<string, string> = {
+  Polos: '/img/p-polo-vinil.webp', 'Tazas y termos': '/img/p-taza-mama.webp', Gorras: '/img/p-gorra.webp',
+  Bolsas: '/img/p-tote.webp', Hogar: '/img/p-cojin.webp', Equipos: '/img/p-camisetas.webp',
+};
 ---
-<Layout>
-  <Header />
-  <main>
-    <Hero />
-    <Marquee />
-    <Services />
-    <Techniques />
-    <Process />
-    <Contact />
-  </main>
-  <Footer />
-</Layout>
+<Shop>
+  <Hero />
+  <Marquee />
+
+  <section class="py-20 sm:py-24">
+    <div class="container-x">
+      <div class="reveal flex items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow">Categorías</p>
+          <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">¿Qué quieres personalizar hoy?</h2>
+        </div>
+        <a href="/tienda" class="hidden text-sm font-semibold text-teal hover:underline sm:block">Ver toda la tienda →</a>
+      </div>
+      <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        {categories.map((c, i) => (
+          <a href={`/tienda?cat=${encodeURIComponent(c)}`} class="reveal group relative aspect-[4/5] overflow-hidden rounded-[1.5rem] shadow-soft" style={`--d:${i * 60}ms`}>
+            <img src={catImg[c]} alt="" width="800" height="800" loading="lazy" class="size-full object-cover transition duration-700 group-hover:scale-110" />
+            <span class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent"></span>
+            <span class="absolute inset-x-4 bottom-4 font-display text-base font-bold text-white">{c}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-gradient-to-b from-sky-2 to-mist py-20 sm:py-24">
+    <div class="container-x">
+      <div class="reveal flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div class="max-w-2xl">
+          <p class="eyebrow">Packs con descuento</p>
+          <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">Combos listos para regalar o lanzar tu marca</h2>
+          <p class="mt-3 text-ink/65">Todo personalizado con el mismo diseño y a mejor precio que por separado.</p>
+        </div>
+        <a href="/packs" class="btn btn-outline shrink-0">Ver los 7 packs</a>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {featuredPacks.map((p, i) => <PackCard p={p} delay={i * 90} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-24">
+    <div class="container-x">
+      <div class="reveal flex items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow">Los más pedidos</p>
+          <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">Favoritos de nuestros clientes</h2>
+        </div>
+        <a href="/tienda" class="hidden text-sm font-semibold text-teal hover:underline sm:block">Ver todos →</a>
+      </div>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {featured.map((p, i) => <ProductCard p={p} delay={i * 70} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-20 sm:pb-24">
+    <div class="container-x grid gap-4 md:grid-cols-3">
+      {[
+        { i: '🎨', t: 'Diseño y vista previa gratis', d: 'Te mostramos cómo quedará antes de producir.' },
+        { i: '🚚', t: 'Delivery en Lima en 48 h', d: 'Gratis desde S/ 150. Envíos a provincia por agencia.' },
+        { i: '💬', t: 'Compra fácil por WhatsApp', d: 'Arma tu carrito y te atendemos al instante.' },
+      ].map((b, k) => (
+        <div class="reveal flex items-start gap-4 rounded-3xl border border-navy/8 bg-white p-6 shadow-sm" style={`--d:${k * 80}ms`}>
+          <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-sky-2 text-2xl">{b.i}</span>
+          <div><p class="font-bold text-navy">{b.t}</p><p class="mt-1 text-sm text-ink/60">{b.d}</p></div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <Techniques />
+  <Testimonials limit={3} />
+
+  <section class="py-20 sm:py-24">
+    <div class="container-x">
+      <div class="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-navy via-navy-2 to-teal px-8 py-14 text-center text-white shadow-lift sm:px-16">
+        <div class="pointer-events-none absolute -right-16 -bottom-20 size-72 rounded-full bg-gold/30 blur-3xl"></div>
+        <h2 class="relative text-3xl font-extrabold sm:text-4xl">¿Tienes una idea en mente?</h2>
+        <p class="relative mx-auto mt-4 max-w-xl text-white/75">Mándanos tu foto, logo o frase y te enviamos la vista previa y el precio en minutos.</p>
+        <div class="relative mt-8 flex flex-wrap justify-center gap-3">
+          <a href={waLink('Hola Karbell Crea, tengo una idea para personalizar y quiero una cotización.')} target="_blank" rel="noopener" data-wa-label="CTA inicio" class="btn bg-[#25d366] text-white hover:-translate-y-0.5">Cotizar por WhatsApp</a>
+          <a href="/como-comprar" class="btn border border-white/30 text-white hover:bg-white/10">¿Cómo comprar?</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Shop>

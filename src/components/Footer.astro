@@ -1,14 +1,42 @@
 ---
-import { site } from '../data/site';
+import { site, waLink } from '../data/site';
 const year = new Date().getFullYear();
 ---
-<footer class="border-t border-navy/10 bg-white">
-  <div class="container-x flex flex-col items-center justify-between gap-6 py-10 sm:flex-row">
-    <a href="#inicio" class="flex items-center gap-2.5">
-      <img src="/img/isotipo.png" alt="" width="289" height="368" loading="lazy" class="h-9 w-auto" />
-      <span class="font-display font-extrabold text-navy">KARBELL <span class="font-semibold tracking-[0.3em] text-teal">CREA</span></span>
-    </a>
-    <p class="text-center text-sm text-ink/55">{site.tagline} · <a href={`mailto:${site.email}`} class="hover:text-teal">{site.email}</a></p>
-    <p class="text-xs text-ink/40">© {year} {site.name}</p>
+<footer class="bg-ink text-white/70">
+  <div class="container-x grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="lg:col-span-2">
+      <a href="/" class="inline-flex items-center gap-2.5">
+        <img src="/img/isotipo.png" alt="" width="289" height="368" loading="lazy" class="h-10 w-auto" />
+        <span class="font-display text-lg font-extrabold text-white">KARBELL <span class="font-semibold tracking-[0.3em] text-teal-2">CREA</span></span>
+      </a>
+      <p class="mt-4 max-w-sm text-sm leading-relaxed">Personalizamos tus ideas con sublimación y vinil textil. Regalos, merch para marcas, uniformes y pedidos por mayor.</p>
+    </div>
+    <div>
+      <p class="font-display text-sm font-bold uppercase tracking-wider text-white">Tienda</p>
+      <ul class="mt-4 grid gap-2 text-sm">
+        <li><a href="/tienda" class="hover:text-gold">Tienda</a></li>
+        <li><a href="/packs" class="hover:text-gold">Packs</a></li>
+        <li><a href="/nosotros" class="hover:text-gold">Quiénes somos</a></li>
+        <li><a href="/como-comprar" class="hover:text-gold">Cómo comprar</a></li>
+        <li><a href="/opiniones" class="hover:text-gold">Opiniones</a></li>
+        <li><a href="/contacto" class="hover:text-gold">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-display text-sm font-bold uppercase tracking-wider text-white">Contacto</p>
+      <ul class="mt-4 grid gap-2 text-sm">
+        <li><a href={waLink('Hola Karbell Crea, quiero hacer un pedido.')} target="_blank" rel="noopener" data-wa-label="Footer" class="hover:text-gold">WhatsApp: <span data-wa-number>+{site.whatsapp}</span></a></li>
+        <li><a href={`mailto:${site.email}`} class="break-all hover:text-gold">{site.email}</a></li>
+        <li>{site.address}, {site.city}</li>
+        <li>{site.hours}</li>
+        <li class="pt-1 text-white/50">Pagos: Yape · Plin · Transferencia</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-x flex flex-col items-center justify-between gap-2 py-6 text-xs text-white/45 sm:flex-row">
+      <p>© {year} {site.name}. Todos los derechos reservados.</p>
+      <p>Sitio de demostración con fines educativos: reseñas y cifras referenciales.</p>
+    </div>
   </div>
 </footer>

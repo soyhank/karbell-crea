@@ -1,0 +1,51 @@
+---
+import Shop from '../layouts/Shop.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PackCard from '../components/PackCard.astro';
+import { packs } from '../data/packs';
+import { waLink } from '../data/site';
+const regalos = packs.filter((p) => p.audience === 'Regalos');
+const negocios = packs.filter((p) => p.audience === 'Negocios');
+---
+<Shop title="Packs y combos | Karbell Crea" description="Packs de regalo y combos para negocios con productos personalizados a mejor precio: Día de la Madre, cumpleaños, kit emprendedor, equipos y promociones.">
+  <PageHeader eyebrow="Packs" title="Combos personalizados con descuento" text="Elegimos los productos que mejor combinan y los personalizamos con el mismo diseño. Pagas menos que comprándolos por separado." crumbs={[{ label: 'Packs' }]} />
+
+  <section class="py-16 sm:py-20">
+    <div class="container-x">
+      <div class="reveal">
+        <p class="eyebrow">Para regalar</p>
+        <h2 class="mt-3 text-3xl font-extrabold text-navy">Packs de regalo</h2>
+        <p class="mt-2 text-ink/60">Incluyen empaque de regalo y tarjeta con dedicatoria.</p>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {regalos.map((p, i) => <PackCard p={p} delay={i * 80} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sky-2 py-16 sm:py-20">
+    <div class="container-x">
+      <div class="reveal">
+        <p class="eyebrow">Para tu negocio</p>
+        <h2 class="mt-3 text-3xl font-extrabold text-navy">Packs para marcas, equipos y promociones</h2>
+        <p class="mt-2 text-ink/60">Precios por volumen, asesoría de diseño y comprobante de pago.</p>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {negocios.map((p, i) => <PackCard p={p} delay={i * 80} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20">
+    <div class="container-x">
+      <div class="reveal grid items-center gap-8 rounded-[2.5rem] bg-ink p-8 text-white sm:p-12 lg:grid-cols-[1.4fr_1fr]">
+        <div>
+          <p class="eyebrow !text-teal-2">Pack a tu medida</p>
+          <h2 class="mt-3 text-3xl font-extrabold">¿No encuentras el combo ideal?</h2>
+          <p class="mt-3 text-white/70">Dinos qué productos y cuántas unidades necesitas. Armamos un pack a tu medida con precio especial en menos de una hora.</p>
+        </div>
+        <a href={waLink('Hola Karbell Crea, quiero armar un pack personalizado. Necesito: ')} target="_blank" rel="noopener" data-wa-label="Pack a medida" class="btn justify-self-start bg-[#25d366] !px-8 !py-4 text-white hover:-translate-y-0.5 lg:justify-self-end">Armar mi pack por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Shop>

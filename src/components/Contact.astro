@@ -1,62 +1,63 @@
 ---
-import { site } from '../data/site';
-import { services } from '../data/services';
+import { site, waLink } from '../data/site';
+import { categories } from '../data/products';
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery)}&output=embed`;
 ---
-<section id="contacto" class="pb-24 sm:pb-28">
-  <div class="container-x">
-    <div class="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-navy via-navy-2 to-teal p-8 text-white shadow-lift sm:p-12 lg:p-16">
-      <div class="dots pointer-events-none absolute inset-0 opacity-20 [filter:invert(1)]"></div>
-      <div class="pointer-events-none absolute -right-20 -bottom-24 size-80 rounded-full bg-gold/30 blur-3xl"></div>
-
-      <div class="relative grid gap-12 lg:grid-cols-[1fr_1.1fr]">
-        <div>
-          <p class="eyebrow !text-sky">Contacto</p>
-          <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">¿Tienes una idea? Hagámosla realidad</h2>
-          <p class="mt-4 max-w-md text-white/75">
-            Estamos preparando el lanzamiento de Karbell Crea y ya recibimos consultas y pedidos. Escríbenos y te responderemos
-            con una propuesta para tu diseño.
-          </p>
-          <a href={`mailto:${site.email}`} class="mt-8 inline-flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-4 transition hover:bg-white/15">
-            <span class="grid size-11 place-items-center rounded-xl bg-gold text-ink">
-              <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
-            </span>
-            <span><span class="block text-xs text-white/60">Escríbenos a</span><span class="font-semibold break-all">{site.email}</span></span>
-          </a>
-        </div>
-
-        <form id="quote-form" class="grid gap-4 rounded-[2rem] bg-white p-6 text-ink sm:p-8" novalidate>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <label class="grid gap-1.5 text-sm font-semibold text-navy">Tu nombre
-              <input name="nombre" class="field font-normal" required autocomplete="name" placeholder="¿Cómo te llamas?" />
-            </label>
-            <label class="grid gap-1.5 text-sm font-semibold text-navy">Producto
-              <select name="producto" class="field font-normal">
-                {services.map((s) => <option>{s.title}</option>)}
-                <option>Otro / aún no lo sé</option>
-              </select>
-            </label>
-          </div>
-          <label class="grid gap-1.5 text-sm font-semibold text-navy">Cantidad aproximada
-            <input name="cantidad" class="field font-normal" inputmode="numeric" placeholder="Ej.: 12 polos" />
-          </label>
-          <label class="grid gap-1.5 text-sm font-semibold text-navy">Cuéntanos tu idea
-            <textarea name="idea" rows="4" class="field resize-none font-normal" required placeholder="Colores, frase, logo, para qué ocasión es, fecha en que lo necesitas..."></textarea>
-          </label>
-          <p id="form-error" class="hidden text-sm font-medium text-red-600">Completa tu nombre y tu idea para continuar.</p>
-          <button type="submit" class="btn btn-gold w-full !py-3.5">
-            Enviar mi idea por correo
-            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" /></svg>
-          </button>
-          <p class="text-center text-xs text-ink/50">Se abrirá tu aplicación de correo con el mensaje listo para enviar.</p>
-        </form>
+<section class="py-16 sm:py-20">
+  <div class="container-x grid gap-8 lg:grid-cols-[1fr_1.15fr]">
+    <div class="grid gap-4">
+      {[
+        { t: 'WhatsApp', v: `+${site.whatsapp}`, href: waLink('Hola Karbell Crea, quiero hacer una consulta.'), wa: true, d: 'Respuesta en minutos' },
+        { t: 'Correo', v: site.email, href: `mailto:${site.email}`, d: 'Cotizaciones para empresas' },
+        { t: 'Taller', v: site.address, href: `https://www.google.com/maps/search/${encodeURIComponent(site.mapQuery)}`, d: `${site.city} · recojo con cita` },
+        { t: 'Horario', v: site.hours, d: 'Domingos y feriados solo por WhatsApp' },
+      ].map((c, i) => (
+        <a href={c.href} target={c.href ? '_blank' : undefined} rel="noopener" data-wa-label={c.wa ? 'Contacto' : undefined} data-contact={c.wa ? undefined : c.t}
+          class:list={['reveal flex items-center gap-4 rounded-3xl border border-navy/8 bg-white p-5 shadow-sm transition', c.href && 'hover:-translate-y-0.5 hover:shadow-soft']} style={`--d:${i * 70}ms`}>
+          <span class:list={['grid size-12 shrink-0 place-items-center rounded-2xl text-white', c.wa ? 'bg-[#25d366]' : 'bg-navy']}>
+            {c.t === 'WhatsApp' && <svg viewBox="0 0 24 24" class="size-6" fill="currentColor"><path d="M12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.8L.1 24l6.3-1.7a11.8 11.8 0 0 0 5.6 1.4 11.8 11.8 0 0 0 8.4-20.1z" /></svg>}
+            {c.t === 'Correo' && <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>}
+            {c.t === 'Taller' && <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>}
+            {c.t === 'Horario' && <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>}
+          </span>
+          <span class="min-w-0">
+            <span class="block text-xs font-semibold uppercase tracking-wider text-ink/45">{c.t}</span>
+            <span class="block break-words font-semibold text-navy" data-wa-number={c.wa ? '' : undefined}>{c.v}</span>
+            <span class="block text-xs text-ink/55">{c.d}</span>
+          </span>
+        </a>
+      ))}
+      <div class="reveal overflow-hidden rounded-3xl border border-navy/8 shadow-sm">
+        <iframe title="Mapa del taller de Karbell Crea" src={mapSrc} loading="lazy" class="h-64 w-full" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
+
+    <form id="quote-form" class="reveal h-fit rounded-[2rem] bg-gradient-to-br from-navy via-navy-2 to-teal p-6 text-white shadow-lift sm:p-10" novalidate>
+      <p class="eyebrow !text-sky">Cotización</p>
+      <h2 class="mt-3 text-3xl font-extrabold">Pide tu cotización</h2>
+      <p class="mt-2 text-white/70">Para empresas, colegios, equipos o pedidos grandes. Te respondemos por WhatsApp con precio y vista previa.</p>
+      <div class="mt-6 grid gap-4 rounded-[1.5rem] bg-white p-5 text-ink sm:p-6">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Tu nombre<input name="nombre" class="field font-normal" required autocomplete="name" /></label>
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Empresa u organización<input name="empresa" class="field font-normal" autocomplete="organization" placeholder="Opcional" /></label>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Producto
+            <select name="producto" class="field font-normal">{categories.map((c) => <option>{c}</option>)}<option>Pack a medida</option><option>Varios productos</option></select>
+          </label>
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Cantidad<input name="cantidad" class="field font-normal" inputmode="numeric" placeholder="Ej.: 24" /></label>
+        </div>
+        <label class="grid gap-1.5 text-sm font-semibold text-navy">Cuéntanos tu idea<textarea name="idea" rows="4" class="field resize-none font-normal" required placeholder="Colores, logo, frase, ocasión, fecha en que lo necesitas..."></textarea></label>
+        <p id="form-error" class="hidden text-sm font-medium text-red-600">Completa tu nombre y tu idea para continuar.</p>
+        <button type="submit" class="btn w-full bg-[#25d366] !py-3.5 text-white hover:-translate-y-0.5">Enviar cotización por WhatsApp</button>
+      </div>
+    </form>
   </div>
 </section>
 
-<script define:vars={{ email: site.email }}>
-  const form = document.getElementById('quote-form');
-  const err = document.getElementById('form-error');
+<script>
+  const form = document.getElementById('quote-form') as HTMLFormElement;
+  const err = document.getElementById('form-error')!;
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const d = new FormData(form);
@@ -64,7 +65,13 @@ import { services } from '../data/services';
     const idea = String(d.get('idea') || '').trim();
     if (!nombre || !idea) { err.classList.remove('hidden'); return; }
     err.classList.add('hidden');
-    const body = `Hola Karbell Crea, soy ${nombre}.\n\nProducto: ${d.get('producto')}\nCantidad: ${String(d.get('cantidad') || '').trim() || 'por definir'}\n\nMi idea:\n${idea}\n`;
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent('Cotización: ' + d.get('producto'))}&body=${encodeURIComponent(body)}`;
+    const cantidad = String(d.get('cantidad') || '').trim() || 'por definir';
+    window.kcTrack('Lead', { content_name: `Cotización ${d.get('producto')}`, content_category: String(d.get('producto')) });
+    const msg = `Hola Karbell Crea 👋 Quiero una cotización.\n\n👤 ${nombre}${d.get('empresa') ? ` (${d.get('empresa')})` : ''}\n📦 ${d.get('producto')} · ${cantidad} unidades\n\n🎨 ${idea}`;
+    window.open(window.kcWa(msg), '_blank', 'noopener');
+    form.reset();
   });
+  document.querySelectorAll<HTMLAnchorElement>('[data-contact]').forEach((a) =>
+    a.addEventListener('click', () => window.kcTrack('Contact', { method: a.dataset.contact!.toLowerCase() })),
+  );
 </script>

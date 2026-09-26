@@ -1,0 +1,22 @@
+---
+import Layout from './Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Cart from '../components/Cart.astro';
+import { waLink } from '../data/site';
+interface Props { title?: string; description?: string }
+const { title, description } = Astro.props;
+---
+<Layout title={title} description={description}>
+  <Header />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+  <Cart />
+  <a href={waLink('Hola Karbell Crea, quiero información sobre sus productos.')} target="_blank" rel="noopener" data-wa-label="Botón flotante"
+    class="fixed right-5 bottom-5 z-40 grid size-14 place-items-center rounded-full bg-[#25d366] text-white shadow-lift transition hover:scale-110" aria-label="Escríbenos por WhatsApp">
+    <span class="absolute inset-0 animate-ping rounded-full bg-[#25d366] opacity-30"></span>
+    <svg viewBox="0 0 24 24" class="relative size-7" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1a8.2 8.2 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.7a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.2-.3-.3-.6-.4zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.8L.1 24l6.3-1.7a11.8 11.8 0 0 0 5.6 1.4 11.8 11.8 0 0 0 8.4-20.1z" /></svg>
+  </a>
+</Layout>

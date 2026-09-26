@@ -1,0 +1,40 @@
+---
+import Shop from '../layouts/Shop.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { waLink } from '../data/site';
+const bars = [
+  { s: 5, n: 287 }, { s: 4, n: 19 }, { s: 3, n: 4 }, { s: 2, n: 1 }, { s: 1, n: 1 },
+];
+const total = bars.reduce((a, b) => a + b.n, 0);
+---
+<Shop title="Opiniones de clientes | Karbell Crea" description="Lee lo que dicen nuestros clientes sobre sus polos, tazas, packs y uniformes personalizados.">
+  <PageHeader eyebrow="Opiniones" title="Clientes felices, pedidos que se repiten" text="Más de 300 reseñas de personas, emprendimientos y equipos que confiaron en nosotros." crumbs={[{ label: 'Opiniones' }]}>
+    <div class="mt-8 grid max-w-2xl items-center gap-6 rounded-[2rem] bg-white p-6 shadow-soft sm:grid-cols-[auto_1fr] sm:p-8">
+      <div class="text-center sm:pr-6">
+        <p class="font-display text-6xl font-black text-navy">4.9</p>
+        <p class="tracking-widest text-gold">★★★★★</p>
+        <p class="mt-1 text-xs text-ink/55">{total} reseñas</p>
+      </div>
+      <div class="grid gap-2">
+        {bars.map((b) => (
+          <div class="flex items-center gap-3 text-xs text-ink/60">
+            <span class="w-8">{b.s} ★</span>
+            <span class="h-2 flex-1 overflow-hidden rounded-full bg-sky-2"><span class="block h-full rounded-full bg-gold" style={`width:${(b.n / total) * 100}%`}></span></span>
+            <span class="w-8 text-right">{b.n}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </PageHeader>
+
+  <Testimonials />
+
+  <section class="py-20 text-center">
+    <div class="container-x">
+      <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">¿Ya compraste con nosotros?</h2>
+      <p class="mt-2 text-ink/60">Cuéntanos cómo te fue y comparte una foto de tu pedido.</p>
+      <a href={waLink('Hola Karbell Crea, quiero dejar mi opinión sobre mi pedido: ')} target="_blank" rel="noopener" data-wa-label="Dejar opinión" class="btn btn-primary mt-6">Dejar mi opinión</a>
+    </div>
+  </section>
+</Shop>

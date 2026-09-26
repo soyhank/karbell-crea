@@ -1,0 +1,116 @@
+---
+import Shop from '../layouts/Shop.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Workshop from '../components/Workshop.astro';
+import Techniques from '../components/Techniques.astro';
+import { stats } from '../data/content';
+import { site } from '../data/site';
+
+const values = [
+  { i: '🎨', t: 'Creatividad', d: 'Cada pedido es único. Escuchamos tu idea y la convertimos en un diseño que se siente tuyo.' },
+  { i: '✅', t: 'Calidad que dura', d: 'Insumos importados, tintas de sublimación certificadas y vinil que resiste las lavadas.' },
+  { i: '⏱️', t: 'Cumplimiento', d: 'Si te damos una fecha, la cumplimos. Sabemos que un regalo no puede llegar tarde.' },
+  { i: '🤝', t: 'Trato cercano', d: 'Te acompañamos por WhatsApp desde la idea hasta la entrega, sin complicaciones.' },
+];
+const team = [
+  { r: 'Fundadora y directora creativa', d: 'Diseña cada propuesta y revisa personalmente la vista previa de los pedidos.', c: 'bg-teal' },
+  { r: 'Producción', d: 'Opera las planchas térmicas y el plotter de corte con control de calidad pieza por pieza.', c: 'bg-navy-2' },
+  { r: 'Atención al cliente', d: 'Responde tus mensajes, coordina pagos, entregas y envíos a provincia.', c: 'bg-gold-2' },
+];
+const timeline = [
+  { y: '2022', t: 'Nace la idea', d: 'Empezamos con una plancha de tazas en casa, haciendo regalos para familia y amigos.' },
+  { y: '2023', t: 'Primer taller', d: 'Sumamos la plancha para prendas y el plotter de corte. Llegan los primeros pedidos de colegios.' },
+  { y: '2024', t: 'Pedidos para empresas', d: 'Atendemos a emprendimientos, equipos deportivos y empresas con packs corporativos.' },
+  { y: '2026', t: 'Tienda online', d: 'Lanzamos nuestra web para que comprar sea tan fácil como enviar un WhatsApp.' },
+];
+---
+<Shop title="Quiénes somos | Karbell Crea" description="Conoce a Karbell Crea: taller de personalización con sublimación y vinil textil en Los Olivos, Lima. Nuestra historia, misión, visión y valores.">
+  <PageHeader eyebrow="Quiénes somos" title="Creamos piezas que cuentan tu historia" text={`Somos un taller de personalización en ${site.address.split(', ').pop()}, Lima. Desde ${site.founded} convertimos ideas en polos, tazas y regalos que la gente guarda para siempre.`} crumbs={[{ label: 'Nosotros' }]} />
+
+  <section class="py-20 sm:py-24">
+    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
+      <div class="reveal grid grid-cols-2 gap-4">
+        <img src="/img/w-plancha.webp" alt="Estampado con plancha térmica" width="800" height="800" loading="lazy" class="aspect-[3/4] w-full rounded-[1.75rem] object-cover shadow-lift" />
+        <img src="/img/w-entrega.webp" alt="Cliente recibiendo su polo" width="800" height="800" loading="lazy" class="mt-12 aspect-[3/4] w-full rounded-[1.75rem] object-cover shadow-soft" />
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Nuestra historia</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">De una plancha en casa a un taller con cientos de clientes</h2>
+        <div class="mt-5 space-y-4 leading-relaxed text-ink/70">
+          <p>Karbell Crea nació de algo simple: las ganas de regalar cosas con significado. Lo que empezó como tazas para la familia se volvió un pequeño negocio cuando amigos y vecinos empezaron a pedir las suyas.</p>
+          <p>Hoy trabajamos con sublimación y vinil textil para personas, emprendimientos, colegios, equipos y empresas. Cada pedido pasa por las mismas manos cuidadosas: diseñamos, te mostramos la vista previa y solo producimos cuando estás feliz con el resultado.</p>
+        </div>
+        <dl class="mt-8 grid grid-cols-2 gap-5">
+          {stats.map((s) => <div class="rounded-2xl bg-white p-4 shadow-sm"><dd class="font-display text-2xl font-extrabold text-navy">{s.n}</dd><dt class="text-xs text-ink/55">{s.l}</dt></div>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-20 text-white sm:py-24">
+    <div class="container-x grid gap-6 md:grid-cols-2">
+      <div class="reveal rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
+        <p class="font-display text-sm font-bold uppercase tracking-[0.2em] text-teal-2">Misión</p>
+        <p class="mt-4 text-xl leading-relaxed text-white/85">Personalizar productos de calidad que ayuden a las personas a expresar lo que sienten y a los negocios a mostrar su marca, con un servicio cercano, rápido y confiable.</p>
+      </div>
+      <div class="reveal rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10" style="--d:100ms">
+        <p class="font-display text-sm font-bold uppercase tracking-[0.2em] text-gold">Visión</p>
+        <p class="mt-4 text-xl leading-relaxed text-white/85">Ser al 2030 la marca de personalización textil y de regalos más recomendada de Lima Norte, reconocida por su creatividad y por cumplir siempre lo prometido.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-24">
+    <div class="container-x">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Nuestros valores</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">Lo que nos mueve cada día</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {values.map((v, i) => (
+          <div class="reveal rounded-[1.75rem] border border-navy/8 bg-white p-7 shadow-soft" style={`--d:${i * 80}ms`}>
+            <span class="grid size-14 place-items-center rounded-2xl bg-sky-2 text-3xl">{v.i}</span>
+            <h3 class="mt-5 text-lg font-bold text-navy">{v.t}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/65">{v.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sky-2 py-20 sm:py-24">
+    <div class="container-x grid gap-12 lg:grid-cols-2">
+      <div class="reveal">
+        <p class="eyebrow">Nuestro camino</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">Cómo llegamos hasta aquí</h2>
+        <ol class="mt-8 space-y-6 border-l-2 border-teal/30 pl-6">
+          {timeline.map((t) => (
+            <li class="relative">
+              <span class="absolute top-1 -left-[2.05rem] size-4 rounded-full border-4 border-sky-2 bg-teal"></span>
+              <p class="font-display text-sm font-extrabold text-teal">{t.y}</p>
+              <p class="font-bold text-navy">{t.t}</p>
+              <p class="text-sm text-ink/65">{t.d}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Nuestro equipo</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">Personas detrás de cada pedido</h2>
+        <div class="mt-8 grid gap-4">
+          {team.map((m) => (
+            <div class="flex items-start gap-4 rounded-3xl bg-white p-5 shadow-sm">
+              <span class={`grid size-12 shrink-0 place-items-center rounded-2xl text-white ${m.c}`}>
+                <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>
+              </span>
+              <div><p class="font-bold text-navy">{m.r}</p><p class="mt-1 text-sm text-ink/65">{m.d}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pt-20 sm:pt-24"><Workshop /></div>
+  <Techniques />
+</Shop>

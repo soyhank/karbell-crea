@@ -1,0 +1,18 @@
+---
+interface Props { eyebrow: string; title: string; text?: string; crumbs?: { href?: string; label: string }[] }
+const { eyebrow, title, text, crumbs = [] } = Astro.props;
+---
+<section class="relative overflow-hidden border-b border-navy/8 bg-gradient-to-br from-sky-2 via-mist to-white py-14 sm:py-20">
+  <div class="dots pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)]"></div>
+  <div class="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-sky/70 blur-3xl"></div>
+  <div class="container-x relative">
+    <nav aria-label="Ruta" class="text-xs text-ink/50">
+      <a href="/" class="hover:text-teal">Inicio</a>
+      {crumbs.map((c) => (<><span class="mx-2">/</span>{c.href ? <a href={c.href} class="hover:text-teal">{c.label}</a> : <span class="text-ink/75">{c.label}</span>}</>))}
+    </nav>
+    <p class="eyebrow mt-6">{eyebrow}</p>
+    <h1 class="mt-3 max-w-3xl text-4xl font-extrabold leading-tight text-navy sm:text-5xl">{title}</h1>
+    {text && <p class="mt-4 max-w-2xl text-lg text-ink/65">{text}</p>}
+    <slot />
+  </div>
+</section>

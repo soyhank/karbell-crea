@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
 import { site } from '../data/site';
-interface Props { title?: string; description?: string }
-const { title = `${site.name} | ${site.tagline}`, description = site.description } = Astro.props;
+interface Props { title?: string; description?: string; noindex?: boolean; tracking?: boolean }
+const { title = `${site.name} | ${site.tagline}`, description = site.description, noindex = false, tracking = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.jpg', Astro.site);
 ---
@@ -13,7 +13,7 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#1d3b5e" />
@@ -25,15 +25,79 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: site.name,
-      url: site.url,
-      logo: `${site.url}/img/logo-karbell.png`,
-      email: site.email,
-      description: site.description,
-    })} />
+    {!noindex && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Store',
+        name: site.name,
+        url: site.url,
+        logo: `${site.url}/img/logo-karbell.png`,
+        image: `${site.url}/og.jpg`,
+        email: site.email,
+        description: site.description,
+        address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
+        priceRange: 'S/ 18 - S/ 65',
+      })} />
+    )}
+    {tracking && (
+      <script is:inline define:vars={{ DEFAULT_WA: site.whatsapp }}>
+        // Capa de medición: lee el Pixel de Meta configurado en /admin y expone kcTrack(evento, datos).
+        (function () {
+          var q = [], cfg = null;
+          var debug = /[?&]kc_debug=1/.test(location.search);
+          try { if (debug) sessionStorage.setItem('kc_debug', '1'); debug = debug || sessionStorage.getItem('kc_debug') === '1'; } catch (e) {}
+
+          function toast(ev, params, sent) {
+            if (!debug) return;
+            console.info('[Karbell pixel]', ev, params || {}, sent ? 'enviado' : 'no enviado');
+            var box = document.getElementById('kc-debug');
+            if (!box) {
+              box = document.createElement('div');
+              box.id = 'kc-debug';
+              box.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:9999;display:grid;gap:6px;max-width:320px;font:12px/1.35 ui-monospace,monospace';
+              document.body.appendChild(box);
+            }
+            var el = document.createElement('div');
+            el.style.cssText = 'background:' + (sent ? '#13263f' : '#7a2e2e') + ';color:#fff;padding:8px 10px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.25)';
+            el.textContent = (sent ? '✔ ' : '✖ ') + ev + (params && params.value ? ' · S/ ' + params.value : '') + (sent ? '' : ' (pixel inactivo)');
+            box.appendChild(el);
+            setTimeout(function () { el.remove(); }, 5000);
+          }
+
+          function send(ev, params) {
+            var on = cfg && cfg.pixelId && cfg.events && cfg.events[ev] && window.fbq;
+            if (on) window.fbq('track', ev, params || {});
+            toast(ev, params, !!on);
+          }
+
+          window.kcTrack = function (ev, params) { cfg ? send(ev, params) : q.push([ev, params]); };
+
+          // WhatsApp: el número real viene de /admin; los enlaces se generan con el número por defecto.
+          var wa = DEFAULT_WA;
+          window.kcWa = function (text) { return 'https://wa.me/' + wa + '?text=' + encodeURIComponent(text); };
+          function applyWa() {
+            document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (a) { a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + wa); });
+            document.querySelectorAll('[data-wa-number]').forEach(function (el) { el.textContent = '+' + wa; });
+          }
+          document.addEventListener('click', function (e) {
+            var a = e.target.closest && e.target.closest('a[href^="https://wa.me/"]');
+            if (a && !a.hasAttribute('data-wa-order')) window.kcTrack('Contact', { method: 'whatsapp', content_name: a.getAttribute('data-wa-label') || 'WhatsApp' });
+          });
+
+          fetch('/api/config').then(function (r) { return r.json(); }).catch(function () { return {}; }).then(function (c) {
+            cfg = c || {};
+            if (cfg.whatsapp) { wa = cfg.whatsapp; document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', applyWa) : applyWa(); }
+            if (cfg.pixelId) {
+              !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+              window.fbq('init', cfg.pixelId);
+            }
+            send('PageView');
+            q.forEach(function (a) { send(a[0], a[1]); });
+            q = [];
+          });
+        })();
+      </script>
+    )}
   </head>
   <body>
     <slot />

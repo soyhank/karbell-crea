@@ -1,0 +1,102 @@
+---
+// Carrito lateral: se abre al agregar productos y lleva a /carrito para cerrar la compra por WhatsApp.
+---
+<div id="cart" class="fixed inset-0 z-[60] hidden" aria-hidden="true">
+  <div data-cart-shade class="absolute inset-0 bg-ink/50 opacity-0 backdrop-blur-sm transition-opacity duration-300"></div>
+  <aside class="absolute top-0 right-0 flex h-full w-full max-w-md translate-x-full flex-col bg-white shadow-lift transition-[translate] duration-300" role="dialog" aria-label="Mi carrito">
+    <div class="flex items-center justify-between border-b border-navy/10 px-6 py-5">
+      <h2 class="text-xl font-extrabold text-navy">Mi carrito</h2>
+      <button data-cart-close class="grid size-9 place-items-center rounded-full bg-mist text-ink/60 hover:text-ink" aria-label="Cerrar">✕</button>
+    </div>
+    <ul data-cart-items class="flex-1 space-y-4 overflow-y-auto px-6 py-5"></ul>
+    <div data-cart-empty class="flex-1 place-content-center px-6 text-center" style="display:none">
+      <p class="text-5xl">🛍️</p>
+      <p class="mt-4 font-semibold text-navy">Tu carrito está vacío</p>
+      <p class="mt-1 text-sm text-ink/60">Mira nuestros productos o arma tu regalo con un pack.</p>
+      <div class="mt-6 flex justify-center gap-2">
+        <a href="/tienda" class="btn btn-primary">Ir a la tienda</a>
+        <a href="/packs" class="btn btn-outline">Ver packs</a>
+      </div>
+    </div>
+    <div data-cart-footer class="border-t border-navy/10 px-6 py-5">
+      <div class="flex items-center justify-between"><span class="text-ink/65">Subtotal</span><span data-cart-subtotal class="font-display text-xl font-extrabold text-navy"></span></div>
+      <p class="mt-1 text-xs text-ink/50">Envío y diseño se coordinan por WhatsApp.</p>
+      <a href="/carrito" class="btn btn-gold mt-4 w-full !py-3.5">Finalizar compra</a>
+      <button data-cart-close class="mt-2 w-full py-2 text-sm font-semibold text-teal">Seguir comprando</button>
+    </div>
+  </aside>
+</div>
+
+<script>
+  import { getItems, setQty, removeItem, subtotal, count, soles, unit, addItem } from '../scripts/cart';
+
+  const root = document.getElementById('cart')!;
+  const panel = root.querySelector('aside')!;
+  const shade = root.querySelector<HTMLElement>('[data-cart-shade]')!;
+  const list = root.querySelector<HTMLElement>('[data-cart-items]')!;
+
+  function render() {
+    const items = getItems();
+    document.querySelectorAll<HTMLElement>('[data-cart-count]').forEach((b) => {
+      b.textContent = String(count(items));
+      b.classList.toggle('hidden', !items.length);
+    });
+    list.innerHTML = items.map((it, i) => `
+      <li class="flex gap-4">
+        <img src="${it.img}" alt="" class="size-20 shrink-0 rounded-2xl object-cover" />
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold leading-snug text-navy">${it.name}</p>
+          ${it.option ? `<p class="text-xs text-ink/55">${it.option}</p>` : ''}
+          <p class="mt-1 text-sm text-ink/70">${soles(unit(it))}${it.kind === 'pack' ? ' el pack' : ' c/u'}${it.dozen && it.qty >= 12 ? ' <span class="text-teal">(precio docena)</span>' : ''}</p>
+          <div class="mt-2 flex items-center gap-2">
+            <div class="flex items-center rounded-full border border-navy/15 text-sm">
+              <button data-i="${i}" data-d="-1" class="grid size-8 place-items-center" aria-label="Menos">−</button>
+              <span class="w-7 text-center font-semibold">${it.qty}</span>
+              <button data-i="${i}" data-d="1" class="grid size-8 place-items-center" aria-label="Más">+</button>
+            </div>
+            <button data-rm="${i}" class="ml-auto text-xs font-semibold text-ink/45 hover:text-red-600">Quitar</button>
+          </div>
+        </div>
+      </li>`).join('');
+    const empty = !items.length;
+    list.style.display = empty ? 'none' : '';
+    root.querySelector<HTMLElement>('[data-cart-empty]')!.style.display = empty ? 'grid' : 'none';
+    root.querySelector<HTMLElement>('[data-cart-footer]')!.style.display = empty ? 'none' : '';
+    root.querySelector('[data-cart-subtotal]')!.textContent = soles(subtotal(items));
+  }
+
+  function open() {
+    render();
+    root.classList.remove('hidden');
+    root.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(() => { panel.classList.remove('translate-x-full'); shade.classList.remove('opacity-0'); });
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    panel.classList.add('translate-x-full');
+    shade.classList.add('opacity-0');
+    document.body.style.overflow = '';
+    setTimeout(() => { root.classList.add('hidden'); root.setAttribute('aria-hidden', 'true'); }, 300);
+  }
+
+  document.querySelectorAll('[data-cart-open]').forEach((b) => b.addEventListener('click', open));
+  document.addEventListener('kc:open-cart', open);
+  document.addEventListener('kc:cart', render);
+  shade.addEventListener('click', close);
+  root.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('button');
+    if (!t) return;
+    if (t.hasAttribute('data-cart-close')) close();
+    if (t.dataset.d) { const it = getItems()[+t.dataset.i!]; setQty(+t.dataset.i!, it.qty + +t.dataset.d); }
+    if (t.dataset.rm) removeItem(+t.dataset.rm);
+  });
+  // Botones "agregar" de las tarjetas en cualquier página
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-quick-add]');
+    if (!b) return;
+    addItem(JSON.parse(b.dataset.quickAdd!));
+    open();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !root.classList.contains('hidden')) close(); });
+  render();
+</script>

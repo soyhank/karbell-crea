@@ -1,0 +1,62 @@
+---
+import Shop from '../layouts/Shop.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Process from '../components/Process.astro';
+import Faq from '../components/Faq.astro';
+
+const zones = [
+  { z: 'Lima Norte (Los Olivos, Comas, Independencia, SMP, Puente Piedra)', p: 'S/ 10.00', t: '24 h' },
+  { z: 'Lima Centro y Callao (Cercado, Breña, San Miguel, Pueblo Libre, Callao)', p: 'S/ 10.00', t: '24–48 h' },
+  { z: 'Lima Moderna (Miraflores, San Isidro, Surco, San Borja, La Molina)', p: 'S/ 10.00', t: '48 h' },
+  { z: 'Lima Este y Sur (SJL, Ate, VMT, Chorrillos, SJM)', p: 'S/ 10.00', t: '48 h' },
+  { z: 'Provincias (Shalom u Olva)', p: 'Pago en destino', t: '2–5 días' },
+];
+const payments = [
+  { t: 'Yape', d: 'Pago inmediato desde tu celular.', c: 'bg-[#742384]' },
+  { t: 'Plin', d: 'Desde BBVA, Interbank, Scotiabank y más.', c: 'bg-[#00b2a9]' },
+  { t: 'Transferencia', d: 'Cuentas BCP e Interbank a nombre de Karbell Crea.', c: 'bg-navy' },
+  { t: 'Contra entrega', d: 'Solo en Lima Norte, pedidos hasta S/ 200.', c: 'bg-gold-2' },
+];
+---
+<Shop title="Cómo comprar | Karbell Crea" description="Compra en 4 pasos por WhatsApp: elige, confirma tu diseño, paga con Yape, Plin o transferencia y recibe en Lima o provincia.">
+  <PageHeader eyebrow="Cómo comprar" title="Comprar es tan fácil como enviar un WhatsApp" text="Arma tu carrito en la web, envíanos el pedido por WhatsApp y nosotros nos encargamos del resto." crumbs={[{ label: 'Cómo comprar' }]} />
+
+  <Process />
+
+  <section class="bg-sky-2 py-20 sm:py-24">
+    <div class="container-x grid gap-12 lg:grid-cols-2">
+      <div class="reveal">
+        <p class="eyebrow">Envíos</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy">Delivery y envíos</h2>
+        <p class="mt-3 text-ink/65">Delivery gratis en Lima por compras desde S/ 150. Recojo gratis en nuestro taller de Los Olivos.</p>
+        <div class="mt-6 overflow-hidden rounded-3xl bg-white shadow-soft">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-navy text-white"><tr><th class="px-5 py-3 font-semibold">Zona</th><th class="px-5 py-3 font-semibold">Costo</th><th class="px-5 py-3 font-semibold">Tiempo</th></tr></thead>
+            <tbody class="divide-y divide-navy/8">
+              {zones.map((z) => <tr><td class="px-5 py-3.5 text-ink/75">{z.z}</td><td class="px-5 py-3.5 font-semibold text-navy">{z.p}</td><td class="px-5 py-3.5 text-ink/65">{z.t}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-xs text-ink/50">El tiempo de entrega se cuenta desde que apruebas la vista previa y el pedido está listo.</p>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Pagos</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy">Medios de pago</h2>
+        <p class="mt-3 text-ink/65">Pedidos menores a S/ 150: pago total al confirmar el diseño. Pedidos mayores: 50 % de adelanto y 50 % a la entrega.</p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          {payments.map((p) => (
+            <div class="flex items-start gap-4 rounded-3xl bg-white p-5 shadow-sm">
+              <span class={`grid size-12 shrink-0 place-items-center rounded-2xl font-display text-sm font-black text-white ${p.c}`}>{p.t.slice(0, 2).toUpperCase()}</span>
+              <div><p class="font-bold text-navy">{p.t}</p><p class="mt-1 text-sm text-ink/65">{p.d}</p></div>
+            </div>
+          ))}
+        </div>
+        <div class="mt-6 rounded-3xl border-2 border-dashed border-teal/30 bg-white/60 p-5 text-sm text-ink/70">
+          <strong class="text-navy">Cambios y garantía:</strong> si tu producto llega con un defecto de impresión, lo reponemos sin costo. Por ser productos personalizados no aceptamos cambios por gusto una vez aprobada la vista previa.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Faq />
+</Shop>

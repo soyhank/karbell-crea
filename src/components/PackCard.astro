@@ -1,0 +1,32 @@
+---
+import { soles } from '../data/products';
+import { regular, saving, includesText, type Pack } from '../data/packs';
+interface Props { p: Pack; delay?: number }
+const { p, delay = 0 } = Astro.props;
+const off = Math.round((saving(p) / regular(p)) * 100);
+---
+<article class="reveal group flex flex-col overflow-hidden rounded-[2rem] border border-navy/8 bg-white shadow-soft transition duration-500 hover:-translate-y-1.5 hover:shadow-lift" data-aud={p.audience} style={`--d:${delay}ms`}>
+  <a href={`/producto/${p.id}`} class="relative block aspect-[4/3] overflow-hidden">
+    <img src={p.img} alt={p.name} width="800" height="800" loading="lazy" class="size-full object-cover transition duration-700 group-hover:scale-105" />
+    <span class="absolute top-4 left-4 rounded-full bg-ink px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider text-white">-{off}%</span>
+    {p.badge && <span class="absolute top-4 right-4 rounded-full bg-gold px-3 py-1 text-[0.68rem] font-bold uppercase tracking-wider text-ink shadow">{p.badge}</span>}
+  </a>
+  <div class="flex flex-1 flex-col p-6">
+    <p class="text-xs font-bold uppercase tracking-[0.18em] text-teal">{p.audience === 'Regalos' ? 'Pack de regalo' : 'Pack para negocios'}</p>
+    <h3 class="mt-1.5 text-xl font-extrabold text-navy"><a href={`/producto/${p.id}`} class="hover:text-teal">{p.name}</a></h3>
+    <ul class="mt-3 grid gap-1 text-sm text-ink/70">
+      {includesText(p).map((t) => <li class="flex gap-2"><span class="text-teal">✓</span>{t}</li>)}
+    </ul>
+    <div class="mt-5 flex items-end justify-between gap-3">
+      <div>
+        <span class="block text-sm text-ink/45 line-through">{soles(regular(p))}</span>
+        <span class="font-display text-3xl font-black text-ink">{soles(p.price)}</span>
+      </div>
+      <span class="rounded-full bg-teal/10 px-3 py-1 text-xs font-bold text-teal">Ahorras {soles(saving(p))}</span>
+    </div>
+    <div class="mt-auto flex gap-2 pt-6">
+      <a href={`/producto/${p.id}`} class="btn btn-outline flex-1 !px-4 !py-2.5">Ver detalle</a>
+      <button class="btn btn-gold flex-1 !px-4 !py-2.5" data-quick-add={JSON.stringify({ id: p.id, kind: 'pack', name: p.name, price: p.price, img: p.img, qty: 1 })}>Agregar</button>
+    </div>
+  </div>
+</article>

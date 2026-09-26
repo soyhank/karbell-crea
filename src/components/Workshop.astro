@@ -1,0 +1,26 @@
+---
+const photos = [
+  { src: '/img/w-plancha.webp', alt: 'Plancha térmica transfiriendo un diseño a una prenda', cls: 'row-span-2' },
+  { src: '/img/w-plotter.webp', alt: 'Plotter de corte para vinil textil', cls: '' },
+  { src: '/img/w-colores.webp', alt: 'Polos de colores listos para personalizar', cls: '' },
+  { src: '/img/w-entrega.webp', alt: 'Cliente mostrando su polo personalizado', cls: 'row-span-2' },
+  { src: '/img/w-plancha2.webp', alt: 'Estampado de polera con plancha', cls: '' },
+  { src: '/img/w-equipo.webp', alt: 'Equipo de fútbol con camisetas personalizadas', cls: '' },
+];
+---
+<section class="pb-24 sm:pb-28">
+  <div class="container-x">
+    <div class="reveal flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div>
+        <p class="eyebrow">Nuestro taller</p>
+        <h2 class="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">Hecho a mano, pieza por pieza</h2>
+      </div>
+      <p class="max-w-md text-ink/65">Trabajamos con planchas térmicas profesionales, plotter de corte e insumos importados para que cada pedido salga impecable.</p>
+    </div>
+    <div class="mt-10 grid auto-rows-[9rem] grid-cols-2 gap-4 sm:auto-rows-[11rem] lg:grid-cols-4">
+      {photos.map((p, i) => (
+        <img src={p.src} alt={p.alt} width="800" height="800" loading="lazy" class={`reveal size-full rounded-[1.5rem] object-cover shadow-soft ${p.cls}`} style={`--d:${i * 60}ms`} />
+      ))}
+    </div>
+  </div>
+</section>

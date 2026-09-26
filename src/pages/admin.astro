@@ -1,0 +1,208 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const events = [
+  { k: 'PageView', t: 'Vista de página', d: 'Cada vez que alguien abre una página de la web.', fixed: true },
+  { k: 'ViewContent', t: 'Ver producto', d: 'Al abrir la ficha de un producto o pack.' },
+  { k: 'AddToCart', t: 'Agregar al carrito', d: 'Al agregar un producto o pack al carrito.' },
+  { k: 'InitiateCheckout', t: 'Iniciar compra', d: 'Al entrar al carrito o pulsar «Comprar por WhatsApp» en una ficha.' },
+  { k: 'Purchase', t: 'Compra (pedido enviado)', d: 'Al enviar el pedido por WhatsApp desde el carrito, con el valor en soles.' },
+  { k: 'Lead', t: 'Cliente potencial', d: 'Al enviar el formulario de cotización de la página de contacto.' },
+  { k: 'Contact', t: 'Contacto', d: 'Al hacer clic en cualquier botón de WhatsApp o en el correo.' },
+];
+---
+<Layout title="Administrador | Karbell Crea" noindex tracking={false}>
+  <div class="min-h-screen bg-gradient-to-br from-sky-2 via-mist to-white">
+    <!-- Login -->
+    <section id="login" class="hidden min-h-screen place-items-center px-4 py-16">
+      <form id="login-form" class="w-full max-w-sm rounded-[2rem] bg-white p-8 shadow-lift">
+        <img src="/img/logo-karbell.png" alt="Karbell Crea" width="659" height="610" class="mx-auto h-24 w-auto" />
+        <h1 class="mt-6 text-center text-2xl font-extrabold text-navy">Panel de administrador</h1>
+        <p class="mt-1 text-center text-sm text-ink/55">Ingresa con tu usuario y contraseña</p>
+        <div class="mt-6 grid gap-4">
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Usuario<input name="user" class="field font-normal" autocomplete="username" required /></label>
+          <label class="grid gap-1.5 text-sm font-semibold text-navy">Contraseña<input name="pass" type="password" class="field font-normal" autocomplete="current-password" required /></label>
+          <p data-login-error class="hidden text-sm font-medium text-red-600"></p>
+          <button class="btn btn-primary w-full !py-3.5">Ingresar</button>
+        </div>
+        <a href="/" class="mt-6 block text-center text-sm text-teal">← Volver a la tienda</a>
+      </form>
+    </section>
+
+    <!-- Panel -->
+    <section id="panel" class="hidden">
+      <header class="border-b border-navy/10 bg-white/80 backdrop-blur">
+        <div class="container-x flex h-16 items-center justify-between">
+          <a href="/" class="flex items-center gap-2.5">
+            <img src="/img/isotipo.png" alt="" width="289" height="368" class="h-9 w-auto" />
+            <span class="font-display font-extrabold text-navy">KARBELL <span class="font-semibold text-teal">ADMIN</span></span>
+          </a>
+          <div class="flex items-center gap-2">
+            <a href="/" target="_blank" class="btn btn-outline !px-4 !py-2">Ver tienda</a>
+            <button id="logout" class="btn !px-4 !py-2 text-ink/60 hover:text-red-600">Cerrar sesión</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="container-x grid gap-6 py-10 lg:grid-cols-[1.5fr_1fr]">
+        <form id="settings-form" class="grid gap-6">
+          <div class="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 class="text-xl font-extrabold text-navy">Pixel de Meta</h2>
+                <p class="text-sm text-ink/55">Mide las visitas y ventas que llegan desde tus anuncios de Facebook e Instagram.</p>
+              </div>
+              <span data-status class="rounded-full px-3 py-1 text-xs font-bold"></span>
+            </div>
+            <div class="mt-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+              <label class="grid gap-1.5 text-sm font-semibold text-navy">ID del pixel (dataset)
+                <input name="pixelId" class="field font-mono font-normal" inputmode="numeric" placeholder="Ej.: 1234567890123456" maxlength="20" />
+              </label>
+              <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-navy/15 px-4 py-3 text-sm font-semibold text-navy">
+                <input name="enabled" type="checkbox" class="peer sr-only" />
+                <span class="relative h-6 w-11 rounded-full bg-navy/20 transition peer-checked:bg-teal after:absolute after:top-0.5 after:left-0.5 after:size-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:after:translate-x-5"></span>
+                Pixel activo
+              </label>
+            </div>
+
+            <p class="mt-8 text-sm font-bold text-navy">Eventos que se envían</p>
+            <div class="mt-3 grid gap-2">
+              {events.map((e) => (
+                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-navy/10 p-4 transition hover:border-teal/50 has-[:checked]:bg-sky-2/60">
+                  <input type="checkbox" name={`ev_${e.k}`} class="mt-1 size-4 accent-teal" disabled={e.fixed} checked={e.fixed} />
+                  <span class="text-sm">
+                    <span class="font-semibold text-navy">{e.t}</span> <code class="ml-1 rounded bg-mist px-1.5 py-0.5 text-xs text-teal">{e.k}</code>
+                    <span class="mt-0.5 block text-ink/60">{e.d}{e.fixed && ' Siempre activo.'}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
+            <h2 class="text-xl font-extrabold text-navy">WhatsApp de ventas</h2>
+            <p class="text-sm text-ink/55">Número al que llegan los pedidos y consultas. Escríbelo con el código de país (51 para Perú).</p>
+            <label class="mt-5 grid max-w-sm gap-1.5 text-sm font-semibold text-navy">Número
+              <input name="whatsapp" class="field font-mono font-normal" inputmode="tel" placeholder="51987654321" required />
+            </label>
+          </div>
+
+          <div class="sticky bottom-4 flex flex-wrap items-center gap-4 rounded-[1.5rem] bg-ink p-4 text-white shadow-lift">
+            <button class="btn btn-gold !px-8">Guardar cambios</button>
+            <p data-save-msg class="text-sm text-white/70"></p>
+          </div>
+        </form>
+
+        <aside class="grid h-fit gap-6">
+          <div class="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
+            <h2 class="text-lg font-extrabold text-navy">Probar la medición</h2>
+            <p class="mt-2 text-sm text-ink/65">Abre la tienda en modo prueba: verás en la esquina inferior cada evento que se dispara y si llegó al pixel.</p>
+            <a href="/?kc_debug=1" target="_blank" class="btn btn-primary mt-4 w-full">Abrir tienda en modo prueba</a>
+            <p class="mt-3 text-xs text-ink/50">También puedes usar la extensión «Meta Pixel Helper» de Chrome o la pestaña «Probar eventos» del Administrador de eventos.</p>
+          </div>
+
+          <div class="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
+            <h2 class="text-lg font-extrabold text-navy">¿Dónde encuentro mi Pixel ID?</h2>
+            <ol class="mt-3 grid gap-2.5 text-sm text-ink/70">
+              <li><strong class="text-navy">1.</strong> Entra a <a href="https://business.facebook.com/events_manager2" target="_blank" rel="noopener" class="text-teal underline">Administrador de eventos</a> de Meta.</li>
+              <li><strong class="text-navy">2.</strong> Pulsa «Conectar orígenes de datos» → «Web» y crea tu conjunto de datos (pixel).</li>
+              <li><strong class="text-navy">3.</strong> Elige «Configurar manualmente» y copia el número de 15 o 16 dígitos que aparece como ID.</li>
+              <li><strong class="text-navy">4.</strong> Pégalo aquí, marca «Pixel activo» y guarda. En 1 minuto la tienda ya envía eventos.</li>
+            </ol>
+          </div>
+
+          <form id="pass-form" class="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
+            <h2 class="text-lg font-extrabold text-navy">Cambiar contraseña</h2>
+            <div class="mt-4 grid gap-3">
+              <input name="current" type="password" class="field" placeholder="Contraseña actual" autocomplete="current-password" required />
+              <input name="next" type="password" class="field" placeholder="Nueva contraseña (mín. 8)" autocomplete="new-password" minlength="8" required />
+              <p data-pass-msg class="text-sm"></p>
+              <button class="btn btn-outline w-full">Actualizar contraseña</button>
+            </div>
+          </form>
+        </aside>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const login = $('#login'), panel = $('#panel');
+  const form = $<HTMLFormElement>('#settings-form');
+  const EVENTS = ['ViewContent', 'AddToCart', 'InitiateCheckout', 'Purchase', 'Lead', 'Contact'];
+
+  const showLogin = () => { panel.classList.add('hidden'); login.classList.remove('hidden'); login.classList.add('grid'); };
+  const showPanel = () => { login.classList.add('hidden'); login.classList.remove('grid'); panel.classList.remove('hidden'); };
+
+  function fill(s: any) {
+    (form.elements.namedItem('pixelId') as HTMLInputElement).value = s.pixelId || '';
+    (form.elements.namedItem('enabled') as HTMLInputElement).checked = !!s.enabled;
+    (form.elements.namedItem('whatsapp') as HTMLInputElement).value = s.whatsapp || '';
+    EVENTS.forEach((e) => ((form.elements.namedItem('ev_' + e) as HTMLInputElement).checked = !!s.events?.[e]));
+    const st = $('[data-status]');
+    const on = s.enabled && s.pixelId;
+    st.textContent = on ? '● Pixel activo' : '● Pixel inactivo';
+    st.className = `rounded-full px-3 py-1 text-xs font-bold ${on ? 'bg-teal/10 text-teal' : 'bg-red-50 text-red-600'}`;
+    $('[data-save-msg]').textContent = s.updatedAt ? `Último cambio: ${new Date(s.updatedAt).toLocaleString('es-PE')}` : 'Aún no hay cambios guardados.';
+  }
+
+  async function load() {
+    const r = await fetch('/api/admin/settings');
+    if (r.status === 401) return showLogin();
+    fill(await r.json());
+    showPanel();
+  }
+
+  $<HTMLFormElement>('#login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target as HTMLFormElement;
+    const err = $('[data-login-error]');
+    const btn = f.querySelector('button')!;
+    btn.disabled = true; btn.textContent = 'Ingresando…';
+    const r = await fetch('/api/admin/login', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ user: (f.elements.namedItem('user') as HTMLInputElement).value, pass: (f.elements.namedItem('pass') as HTMLInputElement).value }),
+    });
+    btn.disabled = false; btn.textContent = 'Ingresar';
+    if (!r.ok) { err.textContent = (await r.json()).error; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden'); f.reset();
+    load();
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = $('[data-save-msg]');
+    msg.textContent = 'Guardando…';
+    const body = {
+      pixelId: (form.elements.namedItem('pixelId') as HTMLInputElement).value,
+      enabled: (form.elements.namedItem('enabled') as HTMLInputElement).checked,
+      whatsapp: (form.elements.namedItem('whatsapp') as HTMLInputElement).value,
+      events: Object.fromEntries(EVENTS.map((ev) => [ev, (form.elements.namedItem('ev_' + ev) as HTMLInputElement).checked])),
+    };
+    const r = await fetch('/api/admin/settings', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    if (r.status === 401) return showLogin();
+    const data = await r.json();
+    if (!r.ok) { msg.textContent = '⚠ ' + data.error; return; }
+    fill(data);
+    msg.textContent = '✔ Cambios guardados. La tienda los usará en menos de un minuto.';
+  });
+
+  $<HTMLFormElement>('#pass-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target as HTMLFormElement;
+    const out = $('[data-pass-msg]');
+    const r = await fetch('/api/admin/password', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ current: (f.elements.namedItem('current') as HTMLInputElement).value, next: (f.elements.namedItem('next') as HTMLInputElement).value }),
+    });
+    const data = await r.json();
+    out.className = `text-sm ${r.ok ? 'text-teal' : 'text-red-600'}`;
+    out.textContent = r.ok ? '✔ Contraseña actualizada.' : data.error;
+    if (r.ok) f.reset();
+  });
+
+  $('#logout').addEventListener('click', async () => { await fetch('/api/admin/logout', { method: 'POST' }); showLogin(); });
+
+  load().catch(showLogin);
+</script>

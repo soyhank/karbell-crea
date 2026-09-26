@@ -1,0 +1,28 @@
+---
+import { soles, type Product } from '../data/products';
+interface Props { p: Product; delay?: number }
+const { p, delay = 0 } = Astro.props;
+---
+<article class="reveal group flex flex-col overflow-hidden rounded-[1.75rem] border border-navy/8 bg-white shadow-soft transition duration-500 hover:-translate-y-1.5 hover:shadow-lift" data-cat={p.category} style={`--d:${delay}ms`}>
+  <a href={`/producto/${p.id}`} class="relative block aspect-square overflow-hidden bg-sky-2">
+    <img src={p.img} alt={p.name} width="800" height="800" loading="lazy" class="size-full object-cover transition duration-700 group-hover:scale-105" />
+    {p.badge && <span class="absolute top-3 left-3 rounded-full bg-gold px-3 py-1 text-[0.68rem] font-bold uppercase tracking-wider text-ink shadow">{p.badge}</span>}
+    <span class={`absolute right-3 bottom-3 rounded-full px-3 py-1 text-[0.66rem] font-bold uppercase tracking-wider text-white backdrop-blur ${p.tech === 'Sublimación' ? 'bg-teal/85' : 'bg-navy/85'}`}>{p.tech}</span>
+  </a>
+  <div class="flex flex-1 flex-col p-5">
+    <p class="text-xs font-semibold uppercase tracking-wider text-ink/45">{p.category}</p>
+    <h3 class="mt-1 text-[1.05rem] font-bold leading-snug text-navy"><a href={`/producto/${p.id}`} class="hover:text-teal">{p.name}</a></h3>
+    <div class="mt-3 flex flex-wrap items-baseline gap-x-2">
+      <span class="font-display text-2xl font-extrabold text-ink">{soles(p.price)}</span>
+      {p.dozen && <span class="text-xs text-teal">x12: {soles(p.dozen)} c/u</span>}
+    </div>
+    <div class="mt-auto flex gap-2 pt-5">
+      <a href={`/producto/${p.id}`} class="btn btn-primary flex-1 !px-4 !py-2.5">Personalizar</a>
+      <button class="grid size-11 shrink-0 place-items-center rounded-full border border-navy/15 text-navy transition hover:border-teal hover:bg-teal hover:text-white"
+        data-quick-add={JSON.stringify({ id: p.id, kind: 'product', name: p.name, price: p.price, dozen: p.dozen, img: p.img, option: p.options?.values[Math.min(1, p.options.values.length - 1)], qty: 1 })}
+        aria-label={`Agregar ${p.name} al carrito`}>
+        <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+      </button>
+    </div>
+  </div>
+</article>
